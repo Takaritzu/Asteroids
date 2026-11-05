@@ -1,6 +1,7 @@
 import pygame
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from logger import log_state
+import player
 
 def main():
     pygame.init()
@@ -15,6 +16,8 @@ def main():
             if event.type == pygame.QUIT:
                 return
         screen.fill("black")
+        starship = player.Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
+        starship.draw(screen)
         pygame.display.flip()
         clock.tick(60) / 1000
 
