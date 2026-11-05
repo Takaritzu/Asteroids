@@ -1,8 +1,6 @@
-import pygame, player, asteroid
+import pygame, player, asteroid, asteroidfield, sys, shot
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
-from logger import log_state
-from asteroidfield import AsteroidField
-
+from logger import log_state, log_event
 
 def main():
     #initialisation
@@ -16,13 +14,15 @@ def main():
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
+    shots = pygame.sprite.Group()
     player.Player.containers = (updatable, drawable)
     asteroid.Asteroid.containers = (asteroids, updatable, drawable)
-    AsteroidField.containers = (updatable)
+    asteroidfield.AsteroidField.containers = (updatable)
+    shot.Shot.containers = (shots, drawable, updatable)
 
     #game start
     starship = player.Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
-    rockstar = AsteroidField()
+    rockstar = asteroidfield.AsteroidField()
 
     while True:
         log_state()
@@ -32,6 +32,11 @@ def main():
         screen.fill("black")
         for element in updatable:
             element.update(dt)
+        for element in asteroids:
+            if element.collides_with(starship):
+                log_event("player_hit")
+                print("Game over!")
+                sys.exit()
         for element in drawable:
             element.draw(screen)
         pygame.display.flip()
