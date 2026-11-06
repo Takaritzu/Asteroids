@@ -33,10 +33,21 @@ def main():
         for element in updatable:
             element.update(dt)
         for element in asteroids:
+            destroyed = False
+            for bullet in shots:
+                if element.collides_with(bullet):
+                    log_event("asteroid_shot")
+                    element.split()
+                    bullet.kill()
+                    destroyed = True
+                    break
+            if destroyed:
+                continue
             if element.collides_with(starship):
                 log_event("player_hit")
                 print("Game over!")
                 sys.exit()
+
         for element in drawable:
             element.draw(screen)
         pygame.display.flip()
